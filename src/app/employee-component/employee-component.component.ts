@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IEmployee } from './employee';
+import { EmployeeService } from './employee.service';
 
 @Component({
   selector: 'app-employee-component',
@@ -7,13 +8,22 @@ import { IEmployee } from './employee';
   styleUrls: ['./employee-component.component.css']
 })
 export class EmployeeComponentComponent implements OnInit {
-  constructor() {}
+  private _listFilter: string = '';
+  filteredEmployees: IEmployee[] = [];
+  employees: IEmployee[] = [];
+
+  constructor(private employeeService: EmployeeService) {}
+
+  //ALTERNATIVE CODE OF CONSTRUCTOR
+  // private employeeService;
+  // constructor(employeeService: EmployeeService) {
+  //   this.employeeService = employeeService;
+  // }
 
   ngOnInit() {
+    this.employees = this.employeeService.getEmployees();
     this.listFilter = 'Patel';
   }
-
-  private _listFilter: string = '';
 
   get listFilter(): string {
     return this._listFilter;
@@ -24,31 +34,6 @@ export class EmployeeComponentComponent implements OnInit {
     console.log('In Setter:', value);
     this.filteredEmployees = this.performFilter(value);
   }
-
-  filteredEmployees: IEmployee[] = [];
-  employees: IEmployee[] = [
-    {
-      id: 1,
-      code: 'VOD1410',
-      name: 'Akshay Patel',
-      salary: 3000,
-      starRating: 3.5
-    },
-    {
-      id: 2,
-      code: 'VOD1710',
-      name: 'Panth Patel',
-      salary: 1500,
-      starRating: 4
-    },
-    {
-      id: 2,
-      code: 'VOD0408',
-      name: 'Satish Patel',
-      salary: 5000,
-      starRating: 4.5
-    }
-  ];
 
   performFilter(filterBy: string): IEmployee[] {
     filterBy = filterBy.toLocaleLowerCase();
